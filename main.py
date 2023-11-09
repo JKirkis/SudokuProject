@@ -1,23 +1,26 @@
-#
+# Author: Conor Arends, Jordan Kerkvliet
+# Date Written: 11/09/2023
+# Description: User can play sudoku with error checking and an auto solver
+
 
 # import pygame library
 import pygame
 import random
 
-# initialise the pygame font
+# initialise pygame font
 pygame.font.init()
 
-# Total window
+# create window
 screen = pygame.display.set_mode((500, 600))
 
-# Title and Icon 
+# set game title
 pygame.display.set_caption("Python Sudoku")
-
 x = 0
 y = 0
 dif = 500 / 9
 val = 0
-# Default Sudoku Board.
+
+# sudoku boards
 grids = [
     [
         [7, 8, 0, 4, 0, 0, 1, 2, 0],
@@ -65,11 +68,13 @@ grids = [
     ]
 ]
 
-# Load test fonts for future use
+# get fonts
 font1 = pygame.font.SysFont("Calirbi", 40)
 font2 = pygame.font.SysFont("Calibri", 20)
 
+# set current game to a random board
 current_puzzle = random.choice(grids)
+
 
 def get_cord(pos):
     global x
@@ -80,28 +85,25 @@ def get_cord(pos):
     y = int(y)
 
 
-# Highlight the cell selected
+# highlight selected cell
 def draw_box():
     for i in range(2):
         pygame.draw.line(screen, (255, 0, 0), (x * dif - 3, (y + i) * dif), (x * dif + dif + 3, (y + i) * dif), 7)
         pygame.draw.line(screen, (255, 0, 0), ((x + i) * dif, y * dif), ((x + i) * dif, y * dif + dif), 7)
 
-    # Function to draw required lines for making Sudoku grid
-
 
 def draw():
-    # Draw the lines
-
+    # drawing lines
     for i in range(9):
         for j in range(9):
             if current_puzzle[i][j] != 0:
-                # Fill blue color in already numbered grid
-                pygame.draw.rect(screen, (0, 153, 153), (i * dif, j * dif, dif + 1, dif + 1))
+                # if there is a number in a box, fill it with blue
+                pygame.draw.rect(screen, (0, 150, 150), (i * dif, j * dif, dif + 1, dif + 1))
 
-                # Fill grid with default numbers specified
+                # fill board with font
                 text1 = font1.render(str(current_puzzle[i][j]), 1, (0, 0, 0))
                 screen.blit(text1, (i * dif + 15, j * dif + 15))
-    # Draw lines horizontally and vertically to form grid
+    # draw lines horizontally and vertically to form grid
     for i in range(10):
         if i % 3 == 0:
             thick = 7
@@ -110,26 +112,25 @@ def draw():
         pygame.draw.line(screen, (0, 0, 0), (0, i * dif), (500, i * dif), thick)
         pygame.draw.line(screen, (0, 0, 0), (i * dif, 0), (i * dif, 500), thick)
 
-    # Fill value entered in cell
-
 
 def draw_val(val):
+    # fill cell with entered value
     text1 = font1.render(str(val), 1, (0, 0, 0))
     screen.blit(text1, (x * dif + 15, y * dif + 15))
 
 
-# Raise error when wrong value entered
+# error messages
 def raise_error1():
     text1 = font1.render("Wrong number entered", 1, (0, 0, 0))
     screen.blit(text1, (20, 570))
 
 
 def raise_error2():
-    text1 = font1.render("Wrong !!! Not a valid Key", 1, (0, 0, 0))
+    text1 = font1.render("Invalid key", 1, (0, 0, 0))
     screen.blit(text1, (20, 570))
 
 
-# Check if the value entered in board is valid
+# check for valid entry
 def valid(m, i, j, val):
     for it in range(9):
         if m[i][it] == val:
@@ -145,7 +146,7 @@ def valid(m, i, j, val):
     return True
 
 
-# Solves the sudoku board using Backtracking Algorithm
+# function to solve the puzzle backtracking
 def solve(current_puzzle, i, j):
     while current_puzzle[i][j] != 0:
         if i < 8:
@@ -182,19 +183,19 @@ def solve(current_puzzle, i, j):
     return False
 
 
-# Display instruction for the game
+# display instructions
 def instruction():
-    text1 = font2.render("PRESS D TO RESET TO DEFAULT / R TO CHANGE BOARD", 1, (0, 0, 0))
-    text2 = font2.render("PRESS C TO CLEAR", 1, (0, 0, 0))
-    text3 = font2.render("ENTER VALUES AND PRESS ENTER TO VISUALIZE", 1, (0, 0, 0))
+    text1 = font2.render("Press R to change board", 1, (0, 0, 0))
+    text2 = font2.render("Press C to clear", 1, (0, 0, 0))
+    text3 = font2.render("Press enter to auto-solve", 1, (0, 0, 0))
     screen.blit(text1, (20, 520))
     screen.blit(text2, (20, 540))
     screen.blit(text3, (20, 560))
 
 
-# Display options when solved
+# solved screen
 def result():
-    text1 = font1.render("FINISHED PRESS R or D", 1, (0, 0, 0))
+    text1 = font1.render("Press R to play a new game", 1, (0, 0, 0))
     screen.blit(text1, (20, 570))
 
 
@@ -203,22 +204,23 @@ flag1 = 0
 flag2 = 0
 rs = 0
 error = 0
-# The loop thats keep the window running
+
+# running game loop
 while run:
 
-    # White color background
+    # create background
     screen.fill((255, 255, 255))
     # Loop through the events stored in event.get()
     for event in pygame.event.get():
-        # Quit the game window
+        # quit game
         if event.type == pygame.QUIT:
             run = False
-            # Get the mouse position to insert number
+        # get mouse position
         if event.type == pygame.MOUSEBUTTONDOWN:
             flag1 = 1
             pos = pygame.mouse.get_pos()
             get_cord(pos)
-        # Get the number to be inserted if key pressed
+        # set key bindings
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 x -= 1
@@ -252,7 +254,7 @@ while run:
                 val = 9
             if event.key == pygame.K_RETURN:
                 flag2 = 1
-                # Clears the board
+            #if c is pressed, clear the board
             if event.key == pygame.K_c:
                 rs = 0
                 error = 0
@@ -268,14 +270,14 @@ while run:
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0]
                 ]
-                # If R pressed clear the sudoku board and chooses a new grid
+                # if r is pressed, get a new puzzle
             if event.key == pygame.K_r:
                 current_puzzle = random.choice(grids)
                 rs = 0
                 error = 0
                 flag2 = 0
                 grid = [[0 for _ in range(9)] for _ in range(9)]
-                # If D is pressed, reset the board to the default puzzle
+
                 # Currently not working
             if event.key == pygame.K_d:
                 rs = 0
@@ -314,8 +316,8 @@ while run:
         draw_box()
     instruction()
 
-    # Update window
+    # update window
     pygame.display.update()
 
-# Quit pygame window
+# quit game
 pygame.quit()
