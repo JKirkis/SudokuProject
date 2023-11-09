@@ -11,7 +11,7 @@ import random
 pygame.font.init()
 
 # create window
-screen = pygame.display.set_mode((500, 600))
+screen = pygame.display.set_mode((500, 620))
 
 # set game title
 pygame.display.set_caption("Python Sudoku")
@@ -20,7 +20,7 @@ y = 0
 dif = 500 / 9
 val = 0
 
-# sudoku boards
+# create sudoku boards
 grids = [
     [
         [7, 8, 0, 4, 0, 0, 1, 2, 0],
@@ -163,7 +163,7 @@ def solve(current_puzzle, i, j):
             global x, y
             x = i
             y = j
-            # white color background\
+            # white color background
             screen.fill((255, 255, 255))
             draw()
             draw_box()
@@ -185,7 +185,7 @@ def solve(current_puzzle, i, j):
 
 # display instructions
 def instruction():
-    text1 = font2.render("Press R to change board", 1, (0, 0, 0))
+    text1 = font2.render("Press R to start a new game", 1, (0, 0, 0))
     text2 = font2.render("Press C to clear", 1, (0, 0, 0))
     text3 = font2.render("Press enter to auto-solve", 1, (0, 0, 0))
     screen.blit(text1, (20, 520))
@@ -195,8 +195,8 @@ def instruction():
 
 # solved screen
 def result():
-    text1 = font1.render("Press R to play a new game", 1, (0, 0, 0))
-    screen.blit(text1, (20, 570))
+    text1 = font1.render("You solved the puzzle!", 1, (0, 0, 0))
+    screen.blit(text1, (20, 580))
 
 
 run = True
