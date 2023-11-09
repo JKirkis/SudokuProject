@@ -1,3 +1,5 @@
+#
+
 # import pygame library
 import pygame
 import random
@@ -99,7 +101,7 @@ def draw():
                 # Fill grid with default numbers specified
                 text1 = font1.render(str(current_puzzle[i][j]), 1, (0, 0, 0))
                 screen.blit(text1, (i * dif + 15, j * dif + 15))
-    # Draw lines horizontally and verticallyto form grid
+    # Draw lines horizontally and vertically to form grid
     for i in range(10):
         if i % 3 == 0:
             thick = 7
@@ -118,7 +120,7 @@ def draw_val(val):
 
 # Raise error when wrong value entered
 def raise_error1():
-    text1 = font1.render("WRONG !!!", 1, (0, 0, 0))
+    text1 = font1.render("Wrong number entered", 1, (0, 0, 0))
     screen.blit(text1, (20, 570))
 
 
