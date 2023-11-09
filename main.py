@@ -1,5 +1,6 @@
 # import pygame library
 import pygame
+import random
 
 # initialise the pygame font
 pygame.font.init()
@@ -15,28 +16,66 @@ y = 0
 dif = 500 / 9
 val = 0
 # Default Sudoku Board.
-grid = [
-    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-    [0, 4, 9, 2, 0, 6, 0, 0, 7]
+grids = [
+    [
+        [7, 8, 0, 4, 0, 0, 1, 2, 0],
+        [6, 0, 0, 0, 7, 5, 0, 0, 9],
+        [0, 0, 0, 6, 0, 1, 0, 7, 8],
+        [0, 0, 7, 0, 4, 0, 2, 6, 0],
+        [0, 0, 1, 0, 5, 0, 9, 3, 0],
+        [9, 0, 4, 0, 6, 0, 0, 0, 5],
+        [0, 7, 0, 3, 0, 0, 0, 1, 2],
+        [1, 2, 0, 0, 0, 7, 4, 0, 0],
+        [0, 4, 9, 2, 0, 6, 0, 0, 7]
+    ],
+    [
+        [5, 3, 0, 0, 7, 0, 0, 0, 0],
+        [6, 0, 0, 1, 9, 5, 0, 0, 0],
+        [0, 9, 8, 0, 0, 0, 0, 6, 0],
+        [8, 0, 0, 0, 6, 0, 0, 0, 3],
+        [4, 0, 0, 8, 0, 3, 0, 0, 1],
+        [7, 0, 0, 0, 2, 0, 0, 0, 6],
+        [0, 6, 0, 0, 0, 0, 2, 8, 0],
+        [0, 0, 0, 4, 1, 9, 0, 0, 5],
+        [0, 0, 0, 0, 8, 0, 0, 7, 9]
+    ],
+    [
+        [0, 0, 0, 7, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 3, 0, 8, 5],
+        [0, 0, 0, 0, 2, 5, 0, 0, 0],
+        [0, 6, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 8, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 6, 0, 3, 0, 7, 0],
+        [0, 0, 0, 0, 0, 0, 0, 4, 0],
+        [0, 0, 8, 0, 0, 0, 0, 0, 0]
+    ],
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
 ]
 
 # Load test fonts for future use
 font1 = pygame.font.SysFont("Calirbi", 40)
 font2 = pygame.font.SysFont("Calibri", 20)
 
+current_puzzle = random.choice(grids)
 
 def get_cord(pos):
     global x
     x = pos[0] // dif
+    x = int(x)
     global y
     y = pos[1] // dif
+    y = int(y)
 
 
 # Highlight the cell selected
@@ -53,12 +92,12 @@ def draw():
 
     for i in range(9):
         for j in range(9):
-            if grid[i][j] != 0:
+            if current_puzzle[i][j] != 0:
                 # Fill blue color in already numbered grid
                 pygame.draw.rect(screen, (0, 153, 153), (i * dif, j * dif, dif + 1, dif + 1))
 
                 # Fill grid with default numbers specified
-                text1 = font1.render(str(grid[i][j]), 1, (0, 0, 0))
+                text1 = font1.render(str(current_puzzle[i][j]), 1, (0, 0, 0))
                 screen.blit(text1, (i * dif + 15, j * dif + 15))
     # Draw lines horizontally and verticallyto form grid
     for i in range(10):
@@ -105,8 +144,8 @@ def valid(m, i, j, val):
 
 
 # Solves the sudoku board using Backtracking Algorithm
-def solve(grid, i, j):
-    while grid[i][j] != 0:
+def solve(current_puzzle, i, j):
+    while current_puzzle[i][j] != 0:
         if i < 8:
             i += 1
         elif i == 8 and j < 8:
@@ -116,8 +155,8 @@ def solve(grid, i, j):
             return True
     pygame.event.pump()
     for it in range(1, 10):
-        if valid(grid, i, j, it) == True:
-            grid[i][j] = it
+        if valid(current_puzzle, i, j, it) == True:
+            current_puzzle[i][j] = it
             global x, y
             x = i
             y = j
@@ -127,10 +166,10 @@ def solve(grid, i, j):
             draw_box()
             pygame.display.update()
             pygame.time.delay(20)
-            if solve(grid, i, j) == 1:
+            if solve(current_puzzle, i, j) == 1:
                 return True
             else:
-                grid[i][j] = 0
+                current_puzzle[i][j] = 0
             # white color background\
             screen.fill((255, 255, 255))
 
@@ -143,10 +182,12 @@ def solve(grid, i, j):
 
 # Display instruction for the game
 def instruction():
-    text1 = font2.render("PRESS D TO RESET TO DEFAULT / R TO EMPTY", 1, (0, 0, 0))
-    text2 = font2.render("ENTER VALUES AND PRESS ENTER TO VISUALIZE", 1, (0, 0, 0))
+    text1 = font2.render("PRESS D TO RESET TO DEFAULT / R TO CHANGE BOARD", 1, (0, 0, 0))
+    text2 = font2.render("PRESS C TO CLEAR", 1, (0, 0, 0))
+    text3 = font2.render("ENTER VALUES AND PRESS ENTER TO VISUALIZE", 1, (0, 0, 0))
     screen.blit(text1, (20, 520))
     screen.blit(text2, (20, 540))
+    screen.blit(text3, (20, 560))
 
 
 # Display options when solved
@@ -209,12 +250,12 @@ while run:
                 val = 9
             if event.key == pygame.K_RETURN:
                 flag2 = 1
-                # If R pressed clear the sudoku board
-            if event.key == pygame.K_r:
+                # Clears the board
+            if event.key == pygame.K_c:
                 rs = 0
                 error = 0
                 flag2 = 0
-                grid = [
+                current_puzzle = [
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -225,24 +266,27 @@ while run:
                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0]
                 ]
-            # If D is pressed reset the board to default
+                # If R pressed clear the sudoku board and chooses a new grid
+            if event.key == pygame.K_r:
+                current_puzzle = random.choice(grids)
+                rs = 0
+                error = 0
+                flag2 = 0
+                grid = [[0 for _ in range(9)] for _ in range(9)]
+                # If D is pressed, reset the board to the default puzzle
+                # Currently not working
             if event.key == pygame.K_d:
                 rs = 0
                 error = 0
                 flag2 = 0
-                grid = [
-                    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-                    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-                    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-                    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-                    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-                    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-                    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-                    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-                    [0, 4, 9, 2, 0, 6, 0, 0, 7]
-                ]
+                grid = [[val for val in row] for row in current_puzzle]
+
+            if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7,
+                             pygame.K_8, pygame.K_9]:
+                val = int(pygame.key.name(event.key))
+
     if flag2 == 1:
-        if solve(grid, 0, 0) == False:
+        if solve(current_puzzle, 0, 0) == False:
             error = 1
         else:
             rs = 1
@@ -251,11 +295,11 @@ while run:
         draw_val(val)
         # print(x)
         # print(y)
-        if valid(grid, int(x), int(y), val) == True:
-            grid[int(x)][int(y)] = val
+        if valid(current_puzzle, int(x), int(y), val) == True:
+            current_puzzle[int(x)][int(y)] = val
             flag1 = 0
         else:
-            grid[int(x)][int(y)] = 0
+            current_puzzle[int(x)][int(y)] = 0
             raise_error2()
         val = 0
 
