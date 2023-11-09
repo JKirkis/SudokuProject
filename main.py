@@ -152,7 +152,6 @@ def solve(current_puzzle, i, j):
             global x, y
             x = i
             y = j
-            # white color background
             screen.fill((255, 255, 255))
             draw()
             draw_box()
